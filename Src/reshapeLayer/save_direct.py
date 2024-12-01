@@ -13,7 +13,7 @@ output_tensor = helper.make_tensor_value_info('output', TensorProto.FLOAT, [1, 2
 reshape_node = helper.make_node(
     'Reshape',                      # ノードの種類
     inputs=['input', 'reshape_shape'], # 入力名（2番目はReshapeのターゲット形状）
-    outputs=['reshaped_output']     # 出力名
+    outputs=['output']              # 出力名を直接モデルの出力に接続
 )
 
 # Reshapeのターゲット形状を指定する定数ノード
@@ -24,26 +24,19 @@ reshape_shape = helper.make_tensor(
     vals=np.array([1, 2000], dtype=np.int64).tolist() # 定数値
 )
 
-# IdentityノードでReshapeの出力を最終出力に接続
-identity_node = helper.make_node(
-    'Identity',
-    inputs=['reshaped_output'],
-    outputs=['output']
-)
-
 # グラフの作成
 graph = helper.make_graph(
-    nodes=[reshape_node, identity_node],
-    name='SimpleReshapeModel',       # モデル名
-    inputs=[input_tensor],           # 入力テンソル
-    outputs=[output_tensor],         # 出力テンソル
-    initializer=[reshape_shape]      # 初期化データ
+    nodes=[reshape_node],           # Reshapeノードのみ
+    name='SimpleReshapeModel',      # モデル名
+    inputs=[input_tensor],          # 入力テンソル
+    outputs=[output_tensor],        # 出力テンソル
+    initializer=[reshape_shape]     # 初期化データ
 )
 
 # モデルの作成
 model = helper.make_model(graph, producer_name='custom_reshape_model')
 
 # モデルの保存
-onnx.save(model, 'reshape.onnx')
+onnx.save(model, 'reshape_direct.onnx')
 
-print("モデル 'reshape.onnx' を作成し、保存しました。")
+print("モデル 'reshape_direct.onnx' を作成し、保存しました。")
