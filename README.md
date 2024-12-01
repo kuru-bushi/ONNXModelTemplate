@@ -10,15 +10,16 @@ docker run -it -d -v ./:/home --name onnx-temp onnx-temp
 - reshape
 - add
 - pad
-
 - DepthToSpace
 - ScatterND
 
 
-### converted abnormal
-onnx2tf
-- add
 
+### converted onnx2tf
+error
+- add
+- DepthToSpace
+- ScatterND
 
 - done
 split
