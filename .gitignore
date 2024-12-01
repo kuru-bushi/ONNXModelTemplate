@@ -1,2 +1,6 @@
 *onnx
 _*.py
+*tflite
+assets
+variables
+*.pb
